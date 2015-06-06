@@ -1,0 +1,15 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="dimen_10dp">10dp</dimen>
+    <dimen name="dimen_30dp">30dp</dimen>
+    <dimen name="dimen_60dp">60dp</dimen>
+    <dimen name="dimen_250dp">250dp</dimen>
+
+
+    <color name="button_unselected">#FB8C00</color>
+    <color name="button_selected">#FF1744</color>
+    <color name="text_black">#000000</color>
+    <color name="text_white">#ffffff</color>
+</resources>
