@@ -1,10 +1,14 @@
 package shahharshil46.sunshine;
 
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -43,6 +47,12 @@ public class ForecastFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
@@ -70,20 +80,60 @@ public class ForecastFragment extends Fragment {
         return view;
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.forecast_fragment, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        int id = item.getItemId();
+
+        //noinspection SimplifiableIfStatement
+        if (id == R.id.action_refresh) {
+            FetchWeatherTask fetchWeatherTask = new FetchWeatherTask();
+            fetchWeatherTask.execute("94053");
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
     public class FetchWeatherTask extends AsyncTask<String, Void, String>{
 
         public final String LOG_TAG = FetchWeatherTask.class.getName();
-
+        String postalCode = "";
         @Override
         protected String doInBackground(String... strings) {
-
-
+            if(strings.length>0)
+                postalCode = strings[0];
+            else{
+                postalCode="94043";
+            }
+            String format = "json";
+            int noOfDays = 7;
+            String units = "metrics";
             try {
-                // Construct the URL for the OpenWeatherMap query
-                // Possible parameters are avaiable at OWM's forecast API page, at
-                // http://openweathermap.org/API#forecast
-                URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7");
 
+                final String baseURL = "http://api.openweathermap.org/data/2.5/forecast/daily?";
+                final String postalCodeQueryParam = "q";
+                final String modeQueryParam = "mode";
+                final String unitsQueryParam = "units";
+                final String cntQueryParam = "cnt";
+
+                Uri builtUri = Uri.parse(baseURL).buildUpon()
+                        .appendQueryParameter(postalCodeQueryParam,postalCode)
+                        .appendQueryParameter(modeQueryParam, format)
+                        .appendQueryParameter(unitsQueryParam, units)
+                        .appendQueryParameter(cntQueryParam, Integer.toString(noOfDays))
+                        .build();
+
+//                URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q=94043&mode=json&units=metric&cnt=7");
+                URL url = new URL(builtUri.toString());
+                Log.d(LOG_TAG,"URL of weather api is "+url);
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
                 urlConnection.setRequestMethod("GET");
@@ -111,6 +161,7 @@ public class ForecastFragment extends Fragment {
                     return null;
                 }
                 forecastJsonStr = buffer.toString();
+                Log.d(LOG_TAG,"Forecast String is "+forecastJsonStr);
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
                 // If the code didn't successfully get the weather data, there's no point in attemping
