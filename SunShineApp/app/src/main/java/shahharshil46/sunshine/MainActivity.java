@@ -1,10 +1,13 @@
 package shahharshil46.sunshine;
 
 import android.content.Intent;
+import android.net.Uri;
+import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 /**
  * @author Harshil Shah
@@ -39,6 +42,31 @@ public class MainActivity extends ActionBarActivity {
             return true;
         }
 
+        if(id == R.id.action_show_location_on_maps){
+            openPreferredLocationInMap();
+            return true;
+        }
+
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openPreferredLocationInMap(){
+        String userLocation = PreferenceManager
+                .getDefaultSharedPreferences(getApplicationContext())
+                .getString(getString(R.string.pref_location_key), getString(R.string.pref_location_default));
+        String mapUriString = "geo:0,0?";
+        Uri mapUri = Uri.parse(mapUriString).buildUpon()
+                .appendQueryParameter("q",userLocation)
+                .build();
+        // Create an Intent from gmmIntentUri. Set the action to ACTION_VIEW
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW);
+        mapIntent.setData(mapUri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        if(mapIntent.resolveActivity(getApplicationContext().getPackageManager())!=null){
+            startActivity(mapIntent);
+        }
+        else{
+            Toast.makeText(getApplicationContext(), "No application found to open location", Toast.LENGTH_SHORT).show();
+        }
     }
 }

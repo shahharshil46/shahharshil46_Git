@@ -8,4 +8,8 @@
           android:title="@string/action_refresh"
           android:orderInCategory="100"
           app:showAsAction="never"/>
+    <item android:id="@+id/action_show_location_on_maps"
+          android:title="@string/action_show_location_on_maps"
+          android:orderInCategory="100"
+          app:showAsAction="never"/>
 </menu>
