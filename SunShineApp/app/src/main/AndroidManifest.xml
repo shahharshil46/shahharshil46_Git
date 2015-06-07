@@ -21,10 +21,16 @@
         <activity
             android:name=".DetailActivity"
             android:label="@string/title_activity_detail" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
         </activity>
     </application>
 
