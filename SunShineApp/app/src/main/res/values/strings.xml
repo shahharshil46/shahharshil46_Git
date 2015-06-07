@@ -4,6 +4,7 @@
     <string name="action_settings" translatable="false">Settings</string>
     <string name="action_refresh" translatable="false">Refresh</string>
     <string name="action_show_location_on_maps" translatable="false">Show on maps</string>
+    <string name="action_share_string" translatable="false">Share</string>
     <string name="title_activity_detail" translatable="false">Detailed Weather Information</string>
     <string name="title_activity_settings" translatable="false">Settings</string>
     <string name="pref_location_label" translatable="false">Location</string>
