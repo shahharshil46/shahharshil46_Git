@@ -15,24 +15,11 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Properties;
 
-import javax.activation.DataHandler;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
-import javax.mail.BodyPart;
-import javax.mail.Message;
-import javax.mail.MessagingException;
 import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeBodyPart;
-import javax.mail.internet.MimeMessage;
-import javax.mail.util.ByteArrayDataSource;
-
-import shahharshil46.sos.GMailOauthSender;
 
 /**
  * 07-11 19:57:57.511: D/OpenGLRenderer(25249): clear (0.00, 243 - 243.00 = 0.00, 513.00 - 0.00 = 513.00, 243.00 - 0.00 = 243.00) opaque 0 <0x62055300>
@@ -58,15 +45,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         mainActivity = this;
-
-//        emailEdit = (EditText) findViewById(R.id.toMail);
-//        subjectEdit = (EditText) findViewById(R.id.subject);
-//        messageEdit = (EditText) findViewById(R.id.emailMessage);
         Button sendButton = (Button) findViewById(R.id.sendMail);
-
-//        String toEmail = emailEdit.getText().toString();
-//        String subject = subjectEdit.getText().toString();
-//        String message = messageEdit.getText().toString();
 
         showAccountsDialog(getApplicationContext());
         sendButton.setOnClickListener(new View.OnClickListener()
@@ -74,16 +53,8 @@ public class MainActivity extends Activity {
             @Override
             public void onClick(View view)
             {
-//                String email = emailEdit.getText().toString();
-//                String subject = subjectEdit.getText().toString();
-//                String message = messageEdit.getText().toString();
-
-                /*sendMail(email, subject, message, username);*/
-
                 try{
-                    /*gMailOauthSender.connectToSmtp(mailhost, (int) Integer.parseInt(port), acctSelected.name, token[0], true);*/
                     new SendMailTask("shahharshil46@gmail.com", "Gmail sending by OAuth 2.0", "My Message").execute();
-
                 }
                 catch(Exception e){
                     e.printStackTrace();
@@ -98,16 +69,8 @@ public class MainActivity extends Activity {
         Session session = createSessionObject();
 
         try {
-            String username="", password="";
-            /*Message message = createMessage(subject, messageBody, from ,email,session);*/
             new SendMailTask(email, subject, messageBody).execute();
-        } /*catch (AddressException e) {
-            e.printStackTrace();
-        } catch (MessagingException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }*/ catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -129,10 +92,7 @@ public class MainActivity extends Activity {
 
     private class SendMailTask extends AsyncTask<Void, Void, Void> {
         private ProgressDialog progressDialog;
-
-
         private String toEmail, subject, mailMessage;
-
         private SendMailTask(String toEmail, String subject, String mailMessage) {
             this.toEmail = toEmail;
             this.subject = subject;
@@ -154,26 +114,17 @@ public class MainActivity extends Activity {
         @Override
         protected Void doInBackground(Void... params) {
             try {
-
                 Log.d("MAIL_SENDER","Executing mail sender with OAuth 2.0 try 4");
-
                 GMailOauthSender gMailOauthSender = new GMailOauthSender();
                 gMailOauthSender.sendMail(subject, mailMessage, acctSelected.name, token[0], toEmail);
-
-
-
-
             } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
         }
-
     }
 
     private void showAccountsDialog(final Context context){
-//            OwnerInfo ownerInfo = new OwnerInfo(context);
-
         manager = AccountManager.get(context);
         final Account[] accounts = manager.getAccountsByType("com.google");
         if(accounts.length>0){
@@ -183,7 +134,6 @@ public class MainActivity extends Activity {
                 accountNameArray[i] = accounts[i].name;
             }
             Log.d("WHEREAMI","Multiple google accounts found");
-
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Select a Google Account")
                     .setItems(accountNameArray, new DialogInterface.OnClickListener()
@@ -198,10 +148,7 @@ public class MainActivity extends Activity {
                     });
             AlertDialog accountSelectorDialog = builder.create();
             accountSelectorDialog.show();
-
         }
-
     }
-
 }
 
